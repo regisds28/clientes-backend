@@ -1,18 +1,27 @@
 package br.com.clientes.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
-public class Telefone {
+@Table(name = "telefone")
+public class Telefone implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,9 +32,9 @@ public class Telefone {
 
 	private String tipo;
 
-	@JoinColumn(name = "cliente_id", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "clienteId", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@ManyToOne()
 	private Cliente cliente;
 
 	public Long getId() {
@@ -52,10 +61,16 @@ public class Telefone {
 		this.tipo = tipo;
 	}
 
+	public Telefone() {
+
+	}
+	
+	@JsonIgnore
 	public Cliente getCliente() {
 		return cliente;
 	}
-
+	
+	@JsonIgnore
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}

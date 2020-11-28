@@ -1,8 +1,9 @@
 package br.com.clientes.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,8 +18,10 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"usuario","cpf"})})
-public class Cliente {
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "usuario", "cpf" }) }, name = "cliente")
+public class Cliente implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,22 +32,20 @@ public class Cliente {
 	private String nome;
 	private String usuario;
 	private String senha;
-	
 	private String email;
-	
+
 	@NotBlank
 	@Column(length = 11)
 	private String cpf;
-	
 	private String cep;
 	private String logradouro;
 	private String bairro;
 	private String cidade;
 	private String uf;
-	
+
 	@OneToMany(mappedBy = "cliente", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Telefone> telefone = new ArrayList<Telefone>();
-	
+	private Set<Telefone> telefone = new HashSet<>();
+
 	@Column(columnDefinition = "timestamp default current_timestamp", insertable = false, updatable = false)
 	private LocalDateTime criadoEm;
 
@@ -79,11 +80,11 @@ public class Cliente {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
-	
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -143,12 +144,12 @@ public class Cliente {
 	public void setCriadoEm(LocalDateTime criadoEm) {
 		this.criadoEm = criadoEm;
 	}
-	
-	public List<Telefone> getTelefone() {
+
+	public Set<Telefone> getTelefone() {
 		return telefone;
 	}
 	
-	public void setTelefone(List<Telefone> telefone) {
+	public void setTelefone(Set<Telefone> telefone) {
 		this.telefone = telefone;
 	}
 
