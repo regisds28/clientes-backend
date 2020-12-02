@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import br.com.clientes.exception.ResourceNotFoundException;
 import br.com.clientes.model.Cliente;
 import br.com.clientes.repository.ClienteRepositorio;
 
@@ -35,6 +36,19 @@ public class ClienteService {
 
 		return ResponseEntity.ok().build();
 
+	}
+
+	public Cliente autenticar(String usuario, String senha) {
+		
+		Optional<Cliente> cliente = clienteRepo.findByUsuario(usuario);
+		if(!cliente.isPresent()) {
+			throw new ResourceNotFoundException("Usuário não encontrado!");
+		}
+		if(!cliente.get().getSenha().equals(senha)) {
+			throw new ResourceNotFoundException("Senha inválida!");
+		}
+		
+		return cliente.get();
 	}
 
 }
